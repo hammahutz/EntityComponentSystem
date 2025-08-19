@@ -19,6 +19,7 @@ private World _world;
         IsMouseVisible = true;
         _register = new Register();
         _register.RegisterArchetype(new PosVes(1000));
+        var archetype = _register.GetArchetypes<PosVes>();
     }
 
     protected override void Initialize()

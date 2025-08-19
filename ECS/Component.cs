@@ -1,6 +1,5 @@
 using System;
 
-[Component]
 public abstract class Component
 {
     public int Capacity { get; protected set; }
@@ -8,7 +7,6 @@ public abstract class Component
     {
         Capacity = capacity;
     }
-
 }
 
 public abstract class Component<T> : Component
@@ -26,6 +24,7 @@ public abstract class Component<T, Y> : Component
 
 }
 
+[Component]
 public class Position : Component<float, float>
 {
     public float[] X { get; set; }
@@ -38,10 +37,9 @@ public class Position : Component<float, float>
     }
 
     public override (float, float) this[int index] => (X[index], Y[index]);
-
-
 }
 
+[Component]
 public class Velocity : Component<float, float>
 {
     public float[] Dx { get; set; }

@@ -30,18 +30,15 @@ public class Register
 
     public Register RegisterArchetype(Archetype archetype)
     {
-        if (_archetypeIds.ContainsKey(archetype.Bit))
-        {
-            throw new InvalidOperationException($"Archetype with bit {archetype.Bit} already registered.");
-        }
-        _archetypeIds[archetype.Bit] = archetype;
+        ulong bit = archetype.GetType().GetCustomAttribute<ArchetypeAttribute>().Bit;
+        _archetypeIds[bit] = archetype;
         return this;
     }
 
-    private T GetArchetypes<T> ()
+    public T GetArchetypes<T>()
         where T : Archetype
     {
-        if (_archetypeIds.TryGetValue(Activator.CreateInstance<T>().Bit, out Archetype archetype))
+        if (_archetypeIds.TryGetValue(typeof(T).GetCustomAttribute<ArchetypeAttribute>().Bit, out Archetype archetype))
         {
             return (T)archetype;
         }
@@ -49,25 +46,7 @@ public class Register
         {
             throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not found.");
         }
-
     }
-
-
-    public Archetype GetArchetype(ulong bit)
-    {
-        if (_archetypeIds.TryGetValue(bit, out Archetype archetype))
-        {
-            return archetype;
-        }
-        else
-        {
-            throw new InvalidOperationException($"Archetype with bit {bit} not found.");
-        }
-    }
-    public Archetype GetArchetype<T1>()
-        where T1 : Component => GetArchetype(GetComponentBit<T1>());
-    public Archetype GetArchetype<T1, T2>()
-        where T1 : Component where T2 : Component => GetArchetype(GetComponentBit<T1, T2>());
 
     public static ulong GetComponentBit(params Type[] types)
     {

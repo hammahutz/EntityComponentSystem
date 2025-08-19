@@ -3,26 +3,18 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 
-[Archetype]
 public abstract class Archetype
 {
-    public List<Entity> Entities { get; private set; } = new List<Entity>();
-
-    public abstract ulong Bit {get;  }
-
-    public Entity AddEntity(int id)
-    {
-        Entities.Add(new Entity(id));
-        return Entities[^1];
-    }
+    public List<Entity> Entities { get; protected set; } = new List<Entity>();
 }
 
+[Archetype(typeof(Position), typeof(Velocity))]
 public class PosVes : Archetype
 {
+
     public Position Position { get; private set; }
     public Velocity Velocity { get; private set; }
 
-    public override ulong Bit => Register.GetComponentBit<Position, Velocity>();
 
     public PosVes(int capacity)
     {
@@ -43,6 +35,28 @@ public class PosVes : Archetype
         for (int i = 0; i < Entities.Count; i++)
         {
             action(Position[Entities[i].Id], Velocity[Entities[i].Id]);
+        }
+    }
+
+    public void QueryActionSingleSMID(Action<Vector<float>, Vector<float>, Vector<float>, Vector<float>> action)
+    {
+        int smidWidth = Vector<float>.Count;
+        int n = Entities.Count;
+        for (int i = 0; i < n / smidWidth; i++)
+        {
+            int index = i * smidWidth;
+            action(new Vector<float>(Position.X, index),
+                   new Vector<float>(Position.Y, index),
+                   new Vector<float>(Velocity.Dx, index),
+                   new Vector<float>(Velocity.Dy, index));
+        }
+
+        for (int i = n - n % smidWidth; i < n; i++)
+        {
+            action(new Vector<float>(Position.X, i),
+                   new Vector<float>(Position.Y, i),
+                   new Vector<float>(Velocity.Dx, i),
+                   new Vector<float>(Velocity.Dy, i));
         }
     }
     public void QueryActionParallel(Action<(float, float), (float, float)> action)
@@ -81,7 +95,7 @@ public class PosVes : Archetype
     }
 }
 
-[AttributeUsage(AttributeTargets.Class, Inherited = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public class ArchetypeAttribute : Attribute
 {
     public ulong Bit { get; }

@@ -1,32 +1,37 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 public class World
 {
-    private int _nextEntityId = 0;
-    // private readonly Dictionary<int, Dictionary<Type, IComponent>> _entities = new();
+    private ArchetypeRegister _archetypeRegister = new ArchetypeRegister();
+    private EntityRegister _entityRegister = new EntityRegister();
+
+    public World RegisterArchetype<T>(T archetype)
+    where T : Archetype
+    {
+        _archetypeRegister.RegisterArchetype(archetype);
+        return this;
+    }
+
+    public T GetArchetypes<T>()
+        where T : Archetype => _archetypeRegister.GetArchetypes<T>();
+
+    public Entity[] AddEntity<T>(int capacity = 1)
+        where T : Archetype
+    {
+        Entity[] entities = new Entity[capacity];
+        if (!_archetypeRegister.Contains<T>())
+        {
+            throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not registered.");
+        }
+        for (int i = 0; i < capacity; i++)
+        {
+            entities[i] = GetArchetypes<T>().AddEntity(_entityRegister);
+        }
+        return entities;
+    }
 
 
-    // public Entity CreateEntity()
-    // {
-    //     var entity = new Entity(_nextEntityId++);
-    //     _entities[entity.Id] = new Dictionary<Type, IComponent>();
-    //     return entity;
-    // }
-
-    // public void AddComponent<T>(Entity e, T component) where T : struct, IComponent => _entities[e.Id][typeof(T)] = component;
-    // public T GetComponent<T>(Entity e) where T : struct, IComponent => (T)_entities[e.Id][typeof(T)];
-    // public IEnumerable<(Entity, T1, T2)> Query<T1, T2>()
-    //             where T1 : struct, IComponent
-    //             where T2 : struct , IComponent
-    // {
-    //     foreach (var kvp in _entities)
-    //     {
-    //         var comps = kvp.Value;
-    //         if (comps.ContainsKey(typeof(T1)) && comps.ContainsKey(typeof(T2)))
-    //         {
-    //             yield return (new Entity(kvp.Key), (T1)comps[typeof(T1)], (T2)comps[typeof(T2)]);
-    //         }
-    //     }
-    // }
 }

@@ -8,18 +8,17 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private MovementSystem _movementSystem;
-    private Register _register = new Register();
+    private MovementSystem _movementSystem = new MovementSystem();
+    private World _world;
 
-private World _world;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _register = new Register();
-        _register.RegisterArchetype(new PosVes(1000));
-        var archetype = _register.GetArchetypes<PosVes>();
+        _world = new World();
+        _world.RegisterArchetype(new PosVes(1000));
+        _world.AddEntity<PosVes>(1000);
     }
 
     protected override void Initialize()
@@ -27,14 +26,7 @@ private World _world;
         // TODO: Add your initialization logic here
 
         base.Initialize();
-    _world = new World();
 
-        // var entity = _world.CreateEntity();
-        // _world.AddComponent(entity, new Position { X = 0, Y = 0 });
-        // _world.AddComponent(entity, new Velocity { Speed = 100, DirectionX = 1, DirectionY = 0 });
-
-        // Initialize the MovementSystem
-        _movementSystem = new MovementSystem();
     }
 
     protected override void LoadContent()

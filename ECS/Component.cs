@@ -1,18 +1,13 @@
 [Component]
 public abstract class Component
 {
-    private int _capacity;
+    public int Capacity { get; private set; }
 
-    public int Capacity
+    public Component(int capacity)
     {
-        get => _capacity;
-        private set
-        {
-            _capacity = value;
-            SetArrayCapacity(Capacity);
-        }
+        Capacity = capacity;
     }
-    public Component(int capacity) => Capacity = capacity;
 
-    protected abstract void SetArrayCapacity(int Capacity);
+    public abstract void AddToEntity(int index);
 }
+

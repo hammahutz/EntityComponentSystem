@@ -16,10 +16,6 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _world = new World(1_0000)
-        .RegisterArchetype(new Actor(1000))
-            .RegisterSystem(new MovementSystem())
-            .AddEntity<Actor>(1000);
     }
 
     protected override void Initialize()
@@ -30,11 +26,20 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _world = new World(150_0000)
+            .RegisterArchetype(new Actor(150_000, Content.Load<Texture2D>("pip")))
+            .RegisterSystem(new MovementSystem())
+            .RegisterSystem(new DrawingSystem())
+            .AddEntity<Actor>(150_000);
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (
+            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+            || Keyboard.GetState().IsKeyDown(Keys.Escape)
+        )
             Exit();
 
         // TODO: Add your update logic here
@@ -46,8 +51,9 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
+        _spriteBatch.Begin();
         _world.Draw(_spriteBatch);
+        _spriteBatch.End();
         base.Draw(gameTime);
     }
 }

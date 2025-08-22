@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 public class ArchetypeRegister
 {
@@ -22,8 +20,8 @@ public class ArchetypeRegister
         throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not found.");
     }
 
-
-    public IEnumerable<T1> QueryWith<T1>() where T1 : Component
+    public IEnumerable<T1> QueryWith<T1>()
+        where T1 : Component
     {
         ulong queryMask = ComponentRegister.GetComponentBit<T1>();
         for (int i = 0; i < _archetypes.Count; i++)
@@ -58,8 +56,13 @@ public class ArchetypeRegister
         {
             if ((_archetypes[i].Mask & queryMask) == queryMask)
             {
-                action(_archetypes[i].Entities, _archetypes[i].GetComponent<T1>(), _archetypes[i].GetComponent<T2>());
+                action(
+                    _archetypes[i].Entities,
+                    _archetypes[i].GetComponent<T1>(),
+                    _archetypes[i].GetComponent<T2>()
+                );
             }
         }
     }
 }
+

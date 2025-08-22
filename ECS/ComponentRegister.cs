@@ -9,7 +9,6 @@ public static class ComponentRegister
     private static Dictionary<Type, ulong> _componentIds = new Dictionary<Type, ulong>();
     private static int _nextComponentBit = 0;
 
-
     public static void RegisterComponents()
     {
         Assembly
@@ -41,16 +40,23 @@ public static class ComponentRegister
         return bit;
     }
 
-
     public static ulong GetComponentBit<T1>()
-    where T1 : Component => GetComponentBit(typeof(T1));
+        where T1 : Component => GetComponentBit(typeof(T1));
 
     public static ulong GetComponentBit<T1, T2>()
-    where T1 : Component where T2 : Component => GetComponentBit<T1>() | GetComponentBit<T2>();
+        where T1 : Component
+        where T2 : Component => GetComponentBit(typeof(T1), typeof(T2));
+
+    public static ulong GetComponentBit<T1, T2, T3>()
+        where T1 : Component
+        where T2 : Component
+        where T3 : Component => GetComponentBit(typeof(T1), typeof(T2), typeof(T3));
 }
 
+[AttributeUsage(
+    AttributeTargets.Class | AttributeTargets.Interface,
+    AllowMultiple = true,
+    Inherited = true
+)]
+public class ComponentAttribute : Attribute { }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true, Inherited = true)]
-public class ComponentAttribute : Attribute
-{
-}

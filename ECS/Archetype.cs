@@ -1,24 +1,31 @@
 using System;
 using System.Collections.Generic;
 
+
 public abstract class Archetype
 {
-    public Archetype() { }
+    private int current = 0;
 
-    public List<Entity> Entities { get; protected set; } = new List<Entity>();
-    public Entity[] AddEntity(EntityRegister entityRegister, int amount = 1)
+
+    public Entity[] Entities { get; set; }
+    public Archetype(int capacity)
     {
-        Entity[] entities = new Entity[amount];
+        Entities = new Entity[capacity];
+    }
+    public void AddEntity(EntityRegister entityRegister, int amount = 1)
+    {
         for (int i = 0; i < amount; i++)
         {
-            Entities.Add(entityRegister.FetchEntity());
+            Entities[current] = entityRegister.FetchEntity();
+            current++;
         }
-        return entities;
     }
-   
+
+    public abstract T GetComponent<T>() where T : Component;
+
+
+
+
+    public abstract ulong Mask { get; }
+
 }
-
-
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public class ArchetypeAttribute : Attribute
-{ }

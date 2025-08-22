@@ -1,13 +1,17 @@
+using System.Collections.Generic;
 
-public class Velocity
+public class Velocity : Component
 {
-    public Velocity(int capacity = 1)
+    public float[] X;
+    public float[] Y ;
+
+    public Velocity(int Capacity) : base(Capacity){}
+
+    protected override void SetArrayCapacity(int capacity)
     {
-        X = new float[capacity];
+        X = new float [capacity];
         Y = new float[capacity];
     }
-    public float[] X;
-    public float[] Y;
 }
 
 

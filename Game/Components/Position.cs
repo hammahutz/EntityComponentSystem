@@ -1,15 +1,19 @@
-using System.Numerics;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
-public struct Position
+public class Position : Component
 {
-    public Position(int capacity = 1)
-    {
-        X = new float[capacity];
-        Y = new float[capacity];
-    }
 
     public float[] X;
     public float[] Y;
 
+    public Position(int Capacity) : base(Capacity){}
+
+    protected override void SetArrayCapacity(int capacity)
+    {
+        X = new float[capacity];
+        Y = new float[capacity];
+    }
 }
 

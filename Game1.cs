@@ -16,10 +16,10 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _world = new World()
-        .RegisterArchetype(new PosVel())
+        _world = new World(1_0000)
+        .RegisterArchetype(new Actor(1000))
             .RegisterSystem(new MovementSystem())
-            .AddEntity<PosVel>(1000);
+            .AddEntity<Actor>(1000);
     }
 
     protected override void Initialize()

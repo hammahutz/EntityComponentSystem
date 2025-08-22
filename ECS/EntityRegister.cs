@@ -6,8 +6,8 @@ public class EntityRegister
 {
     private Queue<int> _availableId;
 
-    public EntityRegister() =>
-        _availableId = new Queue<int>(Enumerable.Range(0, Global.MAX_ENTITIES));
+    public EntityRegister(int count = Global.MAX_ENTITIES) =>
+        _availableId = new Queue<int>(Enumerable.Range(0, count));
 
     public Entity FetchEntity()
     {

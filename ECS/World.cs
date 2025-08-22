@@ -1,37 +1,46 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 public class World
 {
-    private ArchetypeRegister _archetypeRegister = new ArchetypeRegister();
     private EntityRegister _entityRegister = new EntityRegister();
+    private ArchetypeRegister _archetypeRegister = new ArchetypeRegister();
+    private SystemRegister _systemRegister = new SystemRegister();
 
-    public World RegisterArchetype<T>(T archetype)
-    where T : Archetype
+    public World RegisterArchetype(Archetype archetype)
     {
-        _archetypeRegister.RegisterArchetype(archetype);
+        _archetypeRegister.RegisterArchetypes(archetype);
+        return this;
+    }
+    public World AddEntity<T>(int capacity = 1)
+        where T : Archetype
+    {
+        _archetypeRegister.GetArchetype<T>().AddEntity(_entityRegister, capacity);
+        return this;
+    }
+    public World RegisterSystem(ISystemUpdate system)
+    {
+        _systemRegister.RegisterSystems(system);
         return this;
     }
 
-    public T GetArchetypes<T>()
-        where T : Archetype => _archetypeRegister.GetArchetypes<T>();
-
-    public Entity[] AddEntity<T>(int capacity = 1)
-        where T : Archetype
+    public World RegisterSystem(ISystemDraw system)
     {
-        Entity[] entities = new Entity[capacity];
-        if (!_archetypeRegister.Contains<T>())
-        {
-            throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not registered.");
-        }
-        for (int i = 0; i < capacity; i++)
-        {
-            entities[i] = GetArchetypes<T>().AddEntity(_entityRegister);
-        }
-        return entities;
+        _systemRegister.RegisterSystems(system);
+        return this;
     }
 
+    public T GetArchetype<T>()
+        where T : Archetype => _archetypeRegister.GetArchetype<T>();
 
+
+    public void Update(GameTime gameTime) => _systemRegister.Update(gameTime, this);
+    public void Draw(SpriteBatch spriteBatch) => _systemRegister.Draw(spriteBatch, this);
+
+    // public T[] QueryWith<T> ()
+    //     where T : Archetype
+    // {
+    //     return _archetypeRegister.QueryWith<T>();
+    // }
 }

@@ -1,18 +1,13 @@
 
-public class Velocity : Component
+public class Velocity
 {
-    public float[] X;
-    public float[] Y;
-
-    public Velocity(int capacity) : base(capacity)
-    {
-    }
-
-    protected override void SetCapacity(int capacity)
+    public Velocity(int capacity = 1)
     {
         X = new float[capacity];
         Y = new float[capacity];
     }
+    public float[] X;
+    public float[] Y;
 }
 
 

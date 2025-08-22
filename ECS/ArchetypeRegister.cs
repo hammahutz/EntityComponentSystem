@@ -5,31 +5,31 @@ using System.Reflection;
 
 public class ArchetypeRegister
 {
-    private Dictionary<Type, Archetype> _archetypeIds = new Dictionary<Type, Archetype>();
+    private List<Archetype> _archetypes = new List<Archetype>();
 
+    public void RegisterArchetypes(Archetype archetype) => _archetypes.Add(archetype);
 
-    public void RegisterArchetype<T>(T archetype)
-    where T: Archetype
-    {
-        _archetypeIds[typeof(T)] = archetype;
-    }
-
-    public T GetArchetypes<T>()
+    public T GetArchetype<T>()
         where T : Archetype
     {
-        if (_archetypeIds.TryGetValue(typeof(T), out Archetype archetype))
+        foreach (var archetype in _archetypes)
         {
-            return (T)archetype;
+            if (archetype is T t)
+            {
+                return t;
+            }
         }
-        else
-        {
-            throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not found.");
-        }
+        throw new InvalidOperationException($"Archetype of type {typeof(T).Name} not found.");
     }
 
-    public bool Contains<T>()
-        where T : Archetype
-    {
-        return _archetypeIds.ContainsKey(typeof(T));
-    }
+    // internal T[] QueryWith<T>() where T : Archetype
+    // {
+    //     for(int i = 0; i < _archetypes.Count; i++)
+    //     {
+    //         if (_archetypes[i] is T t)
+    //         {
+    //             return _archetypes.OfType<T>().ToArray();
+    //         }
+    //     }
+    // }
 }

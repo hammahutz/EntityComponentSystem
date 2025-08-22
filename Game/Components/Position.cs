@@ -1,18 +1,15 @@
 using System.Numerics;
 
-public class Position : Component
+public struct Position
 {
-    public float[] X;
-    public float[] Y;
-
-    public Position(int capacity) : base(capacity)
-    {
-    }
-
-    protected override void SetCapacity(int capacity)
+    public Position(int capacity = 1)
     {
         X = new float[capacity];
         Y = new float[capacity];
     }
+
+    public float[] X;
+    public float[] Y;
+
 }
 

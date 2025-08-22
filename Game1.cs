@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,7 +9,6 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private MovementSystem _movementSystem = new MovementSystem();
     private World _world;
 
     public Game1()
@@ -16,24 +16,20 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _world = new World();
-        _world.RegisterArchetype(new PosVes(1000));
-        _world.AddEntity<PosVes>(1000);
+        _world = new World()
+        .RegisterArchetype(new PosVel())
+            .RegisterSystem(new MovementSystem())
+            .AddEntity<PosVel>(1000);
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         base.Initialize();
-
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
@@ -43,7 +39,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
 
-        _movementSystem.Update(gameTime, _world);
+        _world.Update(gameTime);
         base.Update(gameTime);
     }
 
@@ -51,8 +47,7 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
-
+        _world.Draw(_spriteBatch);
         base.Draw(gameTime);
     }
 }

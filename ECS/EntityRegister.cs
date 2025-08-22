@@ -7,7 +7,7 @@ public class EntityRegister
     private Queue<int> _availableId;
 
     public EntityRegister() =>
-        _availableId = new Queue<int>(Enumerable.Range(0, 5000));
+        _availableId = new Queue<int>(Enumerable.Range(0, Global.MAX_ENTITIES));
 
     public Entity FetchEntity()
     {
@@ -15,7 +15,7 @@ public class EntityRegister
             throw new InvalidOperationException("No available entity IDs.");
 
         int id = _availableId.Dequeue();
-        return new Entity((int)id);
+        return new Entity(id);
     }
 
     public void ReleaseEntity(Entity entity)

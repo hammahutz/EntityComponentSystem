@@ -9,7 +9,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private World _world;
-    private int amount = 230_000;
+    private int amount = 200_000;
 
     public Game1()
     {
@@ -29,8 +29,9 @@ public class Game1 : Game
 
         _world = new World(amount)
             .RegisterArchetype(new Actor(amount, Content.Load<Texture2D>("pip")))
-            .RegisterSystem(new MovementSystem())
-            .RegisterSystem(new DrawingSystem())
+            .RegisterSystem()
+            // .RegisterSystem(new MovementSystem())
+            // .RegisterSystem(new DrawingSystem())
             .AddEntity<Actor>(amount);
 
         Stats.LoadContent(Content.Load<SpriteFont>("font"));

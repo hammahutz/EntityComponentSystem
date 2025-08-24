@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
+[Systems]
 public class MovementSystem : ISystemUpdate
 {
     public void Update(GameTime gameTime, World world)

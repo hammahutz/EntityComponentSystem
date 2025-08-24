@@ -16,14 +16,17 @@ public class DynamicArray<T>
 
     public DynamicArray() { }
 
-    public void Add(T data)
+    public void Add(params T[] data)
     {
-        if (_count >= _data.Length)
+        if (_count + data.Length + 1 >= _data.Length)
         {
-            Array.Resize(ref _data, _data.Length * 2);
+            Array.Resize(ref _data, _data.Length + data.Length);
         }
-        _data[_count] = data;
-        _count++;
+        for (int i = 0; i < data.Length; i++)
+        {
+            _data[_count] = data[i];
+            _count++;
+        }
     }
 
     public void RemoveAt(int index)

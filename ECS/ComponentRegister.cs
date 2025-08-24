@@ -10,16 +10,22 @@ public static class ComponentRegister
 
     public static void RegisterComponents()
     {
+        int count = 1;
+        Console.WriteLine("----------Components----------");
+        Console.WriteLine($"Index\tMask\tName");
         Assembly
             .GetExecutingAssembly()
             .GetTypes()
-            .Where(t => t.GetCustomAttribute<ComponentAttribute>() != null)
+            .Where(t => t.GetCustomAttribute<ComponentAttribute>() != null && !t.IsAbstract)
             .ToList()
             .ForEach(t =>
             {
                 _componentIds[t] = 1UL << _nextComponentBit;
+                Console.WriteLine($"{count}\t{_componentIds[t]}\t{t.Name}");
+                count++;
                 _nextComponentBit++;
             });
+        Console.WriteLine();
     }
 
     public static ulong GetComponentBit(params Type[] types)

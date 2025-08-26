@@ -30,6 +30,12 @@ public class World
         return this;
     }
 
+    public World RegisterSystem()
+    {
+        Systems.RegisterSystems();
+        return this;
+    }
+
     public World RegisterSystem(ISystemUpdate system)
     {
         Systems.RegisterSystems(system);

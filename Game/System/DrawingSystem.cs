@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+[Systems]
 public class DrawingSystem : ISystemDraw
 {
     public void Draw(SpriteBatch spriteBatch, World world)
@@ -26,4 +27,3 @@ public class DrawingSystem : ISystemDraw
         );
     }
 }
-
